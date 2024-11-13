@@ -13,8 +13,13 @@ The **WebRTC Client and Signaling Server** project includes a WebRTC client appl
 ## Installation
 To run the server
 ```bash
-   git clone https://github.com/yourusername/webrtc-client-and-signaling-server.git
+   git clone https://github.com/abdelrahmanamr/webrtc-client-and-signaling-server.git
    cd webrtc-client-and-signaling-server
    cd signaling/NodeJS
    npm install
    node app.js
+
+To run the client
+```bash
+   cd webrtc-client-and-signaling-server
+   python webrtc_client.py
