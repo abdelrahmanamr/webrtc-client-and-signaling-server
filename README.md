@@ -18,8 +18,10 @@ To run the server
    cd signaling/NodeJS
    npm install
    node app.js
+```
 
 To run the client
 ```bash
    cd webrtc-client-and-signaling-server
    python webrtc_client.py
+```
