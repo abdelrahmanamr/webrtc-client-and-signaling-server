@@ -3,8 +3,18 @@ import json
 import websockets
 import cv2
 import numpy as np
+import torch
+import torchvision
+import sys
+import os
 from aiortc import RTCPeerConnection, RTCSessionDescription, RTCIceCandidate
 from aiortc.contrib.media import MediaPlayer, MediaBlackhole
+
+# Add the parent directory of WebRTC_Client_And_Signaling_Server to the sys.path
+sys.path.append(os.path.abspath('/home/student'))
+
+from WebRTC_Client_And_Signaling_Server.object_detector import detect_objects
+from WebRTC_Client_And_Signaling_Server.dope_model import DopeNetwork
 
 # Define the signaling server URL
 SIGNALING_SERVER_URL = "ws://localhost:8082/ws"  # Adjust to your signaling server
@@ -36,6 +46,17 @@ class WebRTCClient:
     def __init__(self):
         self.pc = RTCPeerConnection()
         self.websocket = None  # This will be set when initializing the connection
+        use_cuda = torch.cuda.is_available()
+        device = torch.device("cuda" if use_cuda else "cpu")
+       
+        #self.publisher_ = self.create_publisher(String, 'coordinates', 10)
+        self.model = DopeNetwork()
+        weights_path = os.path.join(".", "mustard_60.pth")
+        state_dict = torch.load(weights_path, map_location=device)
+        new_state_dict = {key.replace('module.', ''): value for key, value in state_dict.items()} 
+        self.model.load_state_dict(new_state_dict)
+        self.model.eval()
+        self.coordinates = []
 
         
 
