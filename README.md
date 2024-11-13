@@ -11,7 +11,10 @@ The **WebRTC Client and Signaling Server** project includes a WebRTC client appl
 - **Signaling Server**: Acts as a bridge to exchange connection details (SDP, ICE candidates) between peers, allowing them to establish a direct connection.
 
 ## Installation
-
+To run the server
 ```bash
    git clone https://github.com/yourusername/webrtc-client-and-signaling-server.git
    cd webrtc-client-and-signaling-server
+   cd signaling/NodeJS
+   npm install
+   node app.js
