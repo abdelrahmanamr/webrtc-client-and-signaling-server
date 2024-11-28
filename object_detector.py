@@ -10,39 +10,15 @@ from scipy.ndimage.filters import gaussian_filter
 from WebRTC_Client_And_Signaling_Server.cuboid import Cuboid3d
 from WebRTC_Client_And_Signaling_Server.pnp_solver import CuboidPNPSolver
 
+#def detect_objects(model, data):
+#    print("data_size",data.shape)	
+#    print("data",data)
+
 def detect_objects(model, data):
-	
-    # Extract relevant data
-    height = data.height
-    width = data.width
-    encoding = data.encoding
-    step = data.step
-    img_arr = data.data
+    print("data.shape",data.shape)
+    image_data = np.array(data, dtype=np.uint8)
+    cv2.imwrite("output_640_480_rgb_image_test.png", data)
     
-    	
-    image_data = np.array(img_arr, dtype=np.uint8)
-
-    expected_size = height * step
-    
-    
-    if image_data.size != expected_size:
-        print(f"Error: Size of image_data ({image_data.size}) does not match expected size ({expected_size})")
-    else:
-    # Reshape the image data array according to height and step (bytes per row)
-        try:
-            image_data = image_data.reshape((height, step // 4, 4))  # Dividing by 4 since RGBA has 4 channels
-        except ValueError as e:
-            print(f"Error: {e}")
-
-        # If the image is stored in big endian format, swap bytes to little endian
-        if data.is_bigendian:
-            image_data = image_data.byteswap().newbyteorder()
-
-        # Convert RGBA to BGRA (OpenCV uses BGR or BGRA format)
-        image_data_rgba = cv2.cvtColor(image_data, cv2.COLOR_BGRA2RGB)
-        rotated_clockwise = cv2.rotate(image_data_rgba, cv2.ROTATE_90_CLOCKWISE)
-        
-        cv2.imwrite("output_640_480_rgb_image_test.png", rotated_clockwise)
         
     image_path = os.path.join(os.getcwd(), "output_640_480_rgb_image_test.png")
     pil_image = Image.open(image_path)

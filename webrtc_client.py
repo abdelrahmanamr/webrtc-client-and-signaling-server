@@ -7,8 +7,10 @@ import torch
 import torchvision
 import sys
 import os
+import time
 from aiortc import RTCPeerConnection, RTCSessionDescription, RTCIceCandidate
 from aiortc.contrib.media import MediaPlayer, MediaBlackhole
+from PIL import Image  # To convert NumPy arrays to PIL images
 
 # Add the parent directory of WebRTC_Client_And_Signaling_Server to the sys.path
 sys.path.append(os.path.abspath('/home/student'))
@@ -46,6 +48,8 @@ class WebRTCClient:
     def __init__(self):
         self.pc = RTCPeerConnection()
         self.websocket = None  # This will be set when initializing the connection
+        self.last_timestamp = None  # To track the time of the previous frame
+        self.total_bytes = 0        # To accumulate frame size for speed calculation
         use_cuda = torch.cuda.is_available()
         device = torch.device("cuda" if use_cuda else "cpu")
        
@@ -88,15 +92,45 @@ class WebRTCClient:
                 #player = MediaPlayer("/dev/video0")
                 while True:
                     frame = await track.recv()
-                    img = frame.to_ndarray(format="bgr24")
+                    frame_size = len(frame.to_ndarray(format="bgr24").tobytes())  
+                    self.total_bytes += frame_size
+                    
+                    # Get the current timestamp
+                    current_timestamp = time.time()
+                    if frame_count == 0
+                    print("current_timestamp",current_timestamp)
 
-                    # Construct filename for each frame
-                    filename = f"frame_{frame_count}.jpg"
+                    if self.last_timestamp is not None:
+                        # Calculate time interval
+                        interval = current_timestamp - self.last_timestamp
+                        if interval > 0:
+                            # Calculate transfer speed (bytes per second)
+                            speed = frame_size / interval
+                            print(f"Frame size: {frame_size} bytes, Transfer speed: {speed:.2f} bytes/sec")
 
-                    # Save the image using OpenCV
-                    cv2.imwrite(filename, img)
-                    print(f"Saved frame {frame_count} as {filename}")
-
+                    # Update timestamp for the next frame
+                    self.last_timestamp = current_timestamp
+                    #img = frame.to_ndarray(format="bgr24")
+                    #result = detect_objects(self.model, img)
+                    #if len(result) > 0:
+                    #	raw_points = result[0]['raw_points']
+                    #	print("raw_points",raw_points)
+                    	# Send the raw points to the WebSocket server
+                    #	await self.send_raw_points(raw_points)
+                    #	int_points = [(int(x), int(y)) for x, y in raw_points if x is not None and y is not None]
+                    #	point_color = (0, 255, 0) 
+                    #	point_radius = 5
+                    #	point_thickness = -1
+                    #	image_path = os.path.join(os.getcwd(), "output_640_480_rgb_image_test.png")
+                    #	pil_image = Image.open(image_path)
+                    #	opencv_image = np.array(pil_image)
+                    #	for point in int_points:
+                    #		cv2.circle(opencv_image, point, point_radius, point_color, point_thickness)
+                    		
+                    #	cv2.imwrite("image_with_points.jpg", opencv_image)
+		
+			
+                    	
         # Ice Candidate Gathering
         @self.pc.on("icecandidate")
         async def on_ice_candidate(candidate):
@@ -153,6 +187,18 @@ class WebRTCClient:
         })
         message_bytes = message.encode('utf-8')
         await self.websocket.send(message_bytes)
+        
+    async def send_raw_points(self, raw_points):
+        # Filter out None values and format points
+        valid_points = [{"x": x, "y": y} for x, y in raw_points if x is not None and y is not None]
+        message = json.dumps({
+            "type": "RawPoints",
+            "payload": valid_points
+        })
+        message_bytes = message.encode('utf-8')
+        # Send the message over the WebSocket
+        if self.websocket:
+            await self.websocket.send(message_bytes)
 
 async def main():
     web_rtc_client = WebRTCClient()
