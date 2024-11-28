@@ -97,7 +97,7 @@ class WebRTCClient:
                     
                     # Get the current timestamp
                     current_timestamp = time.time()
-                    if frame_count == 0
+                    #if frame_count == 0
                     print("current_timestamp",current_timestamp)
 
                     if self.last_timestamp is not None:
@@ -110,24 +110,24 @@ class WebRTCClient:
 
                     # Update timestamp for the next frame
                     self.last_timestamp = current_timestamp
-                    #img = frame.to_ndarray(format="bgr24")
-                    #result = detect_objects(self.model, img)
-                    #if len(result) > 0:
-                    #	raw_points = result[0]['raw_points']
-                    #	print("raw_points",raw_points)
+                    img = frame.to_ndarray(format="bgr24")
+                    result = detect_objects(self.model, img)
+                    if len(result) > 0:
+                    	raw_points = result[0]['raw_points']
+                    	print("raw_points",raw_points)
                     	# Send the raw points to the WebSocket server
                     #	await self.send_raw_points(raw_points)
-                    #	int_points = [(int(x), int(y)) for x, y in raw_points if x is not None and y is not None]
-                    #	point_color = (0, 255, 0) 
-                    #	point_radius = 5
-                    #	point_thickness = -1
-                    #	image_path = os.path.join(os.getcwd(), "output_640_480_rgb_image_test.png")
-                    #	pil_image = Image.open(image_path)
-                    #	opencv_image = np.array(pil_image)
-                    #	for point in int_points:
-                    #		cv2.circle(opencv_image, point, point_radius, point_color, point_thickness)
+                    	int_points = [(int(x), int(y)) for x, y in raw_points if x is not None and y is not None]
+                    	point_color = (0, 255, 0) 
+                    	point_radius = 5
+                    	point_thickness = -1
+                    	image_path = os.path.join(os.getcwd(), "output_640_480_rgb_image_test.png")
+                    	pil_image = Image.open(image_path)
+                    	opencv_image = np.array(pil_image)
+                    	for point in int_points:
+                    		cv2.circle(opencv_image, point, point_radius, point_color, point_thickness)
                     		
-                    #	cv2.imwrite("image_with_points.jpg", opencv_image)
+                    	cv2.imwrite("image_with_points.jpg", opencv_image)
 		
 			
                     	
