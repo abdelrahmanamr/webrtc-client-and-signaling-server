@@ -1,3 +1,7 @@
+pip3 install asyncio json5 websockets opencv-python numpy torch torchvision aiortc scipy pyrr tensorflow
+
+---
+
 # WebRTC Client and Signaling Server
 
 A WebRTC client and signaling server implementation for real-time communication with peer-to-peer audio, video, and data transmission. This project demonstrates how to set up a WebRTC client that connects to a signaling server to establish and manage peer connections.
