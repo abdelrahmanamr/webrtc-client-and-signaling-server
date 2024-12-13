@@ -116,8 +116,14 @@ class WebRTCClient:
                     	raw_points = result[0]['raw_points']
                     	print("raw_points",raw_points)
                     	# Send the raw points to the WebSocket server
-                    #	await self.send_raw_points(raw_points)
-                    	int_points = [(int(x), int(y)) for x, y in raw_points if x is not None and y is not None]
+                    	await self.send_raw_points(raw_points)
+                    	int_points = []
+                    	for point in raw_points:
+                    	  if point is not None:
+                    	    x, y = point
+                    	    if x is not None and y is not None:
+                    	      int_points.append([int(x), int(y)])
+                    	      
                     	point_color = (0, 255, 0) 
                     	point_radius = 5
                     	point_thickness = -1
@@ -190,7 +196,13 @@ class WebRTCClient:
         
     async def send_raw_points(self, raw_points):
         # Filter out None values and format points
-        valid_points = [{"x": x, "y": y} for x, y in raw_points if x is not None and y is not None]
+        valid_points = []
+        for point in raw_points:
+          if point is not None:
+            x, y = point
+            if x is not None and y is not None:
+              valid_points.append({"x": x, "y":y})
+        	
         message = json.dumps({
             "type": "RawPoints",
             "payload": valid_points
