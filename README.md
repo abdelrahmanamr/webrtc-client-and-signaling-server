@@ -13,7 +13,12 @@ For a **demo video** showcasing the functionality of this project, please refer 
 - **Signaling Server**: Acts as a bridge to exchange connection details (SDP, ICE candidates) between peers, allowing them to establish a direct connection.
 
 ## Installation
-To run the server
+
+### Prerequisites
+- **mustard_60.pth**: Ensure mustard_60.pth file is downloaded in the webrtc-client-and-signaling-server directory. Follow the [Deep_Object_Pose](https://github.com/NVlabs/Deep_Object_Pose).
+
+### Steps
+Clone repository and run the server
 ```bash
    git clone https://github.com/abdelrahmanamr/webrtc-client-and-signaling-server.git
    cd webrtc-client-and-signaling-server
@@ -22,7 +27,7 @@ To run the server
    node app.js
 ```
 
-To run the client
+Run the client
 ```bash
    cd webrtc-client-and-signaling-server
    pip3 install asyncio json5 websockets opencv-python numpy torch torchvision aiortc scipy pyrr tensorflow
